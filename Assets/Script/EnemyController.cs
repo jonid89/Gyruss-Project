@@ -1,21 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class EnemyController : MonoBehaviour
 {
     public int shotDamage = 5;
-    public float initialCircleRadius = 0.5f;
-    public float circleRadiusIncrement = 0.1f;
     public float movementSpeed = 100f;
     public int maxHealth = 10;
+    public int hitScore = 2;
+    public float initialCircleRadius = 0.5f;
+    public float circleRadiusIncrement = 0.1f;
     private float currentCircleRadius;
     private int currentHealth;
     private Vector3 centerPosition;
     private float angle;
+    private GameEvents gameEvents;
+    
 
     private void Start()
     {
+        gameEvents = GameEvents.Instance;
+        
+        // Initializing Enemy parameters
         currentHealth = maxHealth;
         currentCircleRadius = initialCircleRadius;
         centerPosition = transform.position;
@@ -47,6 +54,9 @@ public class EnemyController : MonoBehaviour
 
     private void GetDamage()
     {
+        gameEvents.TriggerEnemyHit(shotDamage);
+
+        // Handling Health damaged
         currentHealth -= shotDamage;
         Debug.Log("Current Health: " + currentHealth);
         if (currentHealth <= 0)

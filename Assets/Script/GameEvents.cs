@@ -5,64 +5,29 @@ using UnityEngine;
 
 public class GameEvents : MonoBehaviour
 {
-
 #region Singleton
     public static GameEvents Instance { get; private set; }
     private void Awake()
     {
         Instance = this;
     }
-
 #endregion
 
-    public delegate void LeftClickDown();
-    public static LeftClickDown OnLeftClickDown;
-    public delegate void LeftClickHold();   
-    public static LeftClickHold OnLeftClickHold;
-    public delegate void LeftClickUp();
-    public static LeftClickUp OnLeftClickUp;
-    public delegate void RightClickDown();
-    public static RightClickDown OnRightClickDown;
-    public delegate void RightClickUp();
-    public static RightClickUp OnRightClickUp;
+    public delegate void EnemyHit(int damage);
+    public static EnemyHit OnEnemyHit;
 
     public static void Initialize()
     {
         Instance = new GameEvents();
     }
 
-    public void TriggerLeftClickDown()
+    public void TriggerEnemyHit(int damage)
     {
-        if(OnLeftClickDown != null)
-            OnLeftClickDown();
+        Debug.Log("TriggerEnemyHit Event called with damage: " + damage);
+        if(OnEnemyHit != null)
+            OnEnemyHit(damage);
     }
 
-    public void TriggerLeftClickHold()
-    {
-        if(OnLeftClickHold != null)
-            OnLeftClickHold();
-    }
-
-    public void TriggerLeftClickUp()
-    {
-        if(OnLeftClickUp != null)
-            OnLeftClickUp();
-    }
-
-    public void TriggerRightClickDown()
-    {
-        if(OnRightClickDown != null)
-            OnRightClickDown();
-    }
-
-    public void TriggerRightClickUp()
-    {
-        if(OnRightClickUp != null)
-            OnRightClickUp();
-    }
 }
-
-
-
 
 
