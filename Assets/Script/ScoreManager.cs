@@ -25,7 +25,6 @@ public class ScoreManager : MonoBehaviour
 
     private void OnEnemyHit(int damage)
     {
-        Debug.Log("Enemy hit! Damage: " + damage);
         score += damage;
         scoreText.text = "Score: " + score.ToString();
     }

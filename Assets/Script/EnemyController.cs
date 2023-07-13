@@ -42,7 +42,6 @@ public class EnemyController : MonoBehaviour
         float circleRadiusIncrement)
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        Debug.Log("Sprite Renderer: " + spriteRenderer) ;
         spriteRenderer.sprite = enemySprite;
         spriteRenderer.color = enemyColor;
         transform.localScale = new Vector3(enemySize,-enemySize,1);
@@ -83,9 +82,9 @@ public class EnemyController : MonoBehaviour
 
         // Handling Health damaged
         currentHealth -= shotDamage;
-        Debug.Log("Current Health: " + currentHealth);
         if (currentHealth <= 0)
         {
+            gameEvents.TriggerEnemyKilled();
             Destroy(gameObject);
         }
     }

@@ -9,7 +9,6 @@ public class ShipController : MonoBehaviour
     public float shotCooldown = 0.2f; 
     public Rigidbody2D shotRigidbody; 
     public float shotSpeed = 10f;
-
     public Transform centerTransform;
     private float angle;
     private float shotTimer; 
