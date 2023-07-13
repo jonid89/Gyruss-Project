@@ -5,33 +5,58 @@ using UnityEngine.EventSystems;
 
 public class EnemyController : MonoBehaviour
 {
-    public int shotDamage = 5;
-    public float movementSpeed = 100f;
-    public int maxHealth = 10;
-    public int hitScore = 2;
-    public float initialCircleRadius = 0.5f;
-    public float circleRadiusIncrement = 0.1f;
+    private int shotDamage;
+    private float movementSpeed;
+    private int maxHealth;
+    private int hitScore;
+    private float initialCircleRadius;
+    private float circleRadiusIncrement;
     private float currentCircleRadius;
     private int currentHealth;
     private Vector3 centerPosition;
     private float angle;
     private GameEvents gameEvents;
+    private SpriteRenderer spriteRenderer;
     
 
     private void Start()
     {
         gameEvents = GameEvents.Instance;
-        
-        // Initializing Enemy parameters
-        currentHealth = maxHealth;
-        currentCircleRadius = initialCircleRadius;
-        centerPosition = transform.position;
     }
 
     private void Update()
     {
         currentCircleRadius += circleRadiusIncrement * Time.deltaTime;
         MoveAroundCircle();
+    }
+
+    public void SetConfig(
+        Sprite enemySprite,
+        Color enemyColor,
+        float enemySize,
+        int shotDamage,
+        float movementSpeed,
+        int maxHealth,
+        int hitScore,
+        float initialCircleRadius,
+        float circleRadiusIncrement)
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        Debug.Log("Sprite Renderer: " + spriteRenderer) ;
+        spriteRenderer.sprite = enemySprite;
+        spriteRenderer.color = enemyColor;
+        transform.localScale = new Vector3(enemySize,-enemySize,1);
+        this.shotDamage = shotDamage;
+        this.movementSpeed = movementSpeed;
+        this.maxHealth = maxHealth;
+        this.hitScore = hitScore;
+        this.initialCircleRadius = initialCircleRadius;
+        this.circleRadiusIncrement = circleRadiusIncrement;
+
+        // Initializing Enemy parameters
+        currentHealth = maxHealth;
+        currentCircleRadius = initialCircleRadius;
+        centerPosition = transform.position;
     }
 
     private void MoveAroundCircle()

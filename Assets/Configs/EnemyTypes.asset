@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4709df72b1658a843aaf2101a575e2d5, type: 3}
+  m_Name: EnemyTypes
+  m_EditorClassIdentifier: 
+  enemyTypes:
+  - enemyPrefab: {fileID: 162951245972482276, guid: f6759a17bc57e9141aef78644713fc67, type: 3}
+    enemySprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
+    enemyColor: {r: 0.7921569, g: 0.7529412, b: 0.14509805, a: 1}
+    enemySize: 0.5
+    shotDamage: 5
+    movementSpeed: 100
+    maxHealth: 10
+    hitScore: 2
+    initialCircleRadius: 0.5
+    circleRadiusIncrement: 0.1
+    minBatchSize: 2
+    maxBatchSize: 10
+    batchAmountOnFirstAppearance: 2
+    firstLevelAppearance: 1
+    batchAmountIncreasePerLevel: 1
+  - enemyPrefab: {fileID: 162951245972482276, guid: f6759a17bc57e9141aef78644713fc67, type: 3}
+    enemySprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
+    enemyColor: {r: 0.9056604, g: 0.17774133, b: 0.10679956, a: 1}
+    enemySize: 0.3
+    shotDamage: 5
+    movementSpeed: 100
+    maxHealth: 15
+    hitScore: 3
+    initialCircleRadius: 0.5
+    circleRadiusIncrement: 0.1
+    minBatchSize: 2
+    maxBatchSize: 4
+    batchAmountOnFirstAppearance: 1
+    firstLevelAppearance: 2
+    batchAmountIncreasePerLevel: 1

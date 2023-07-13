@@ -4,43 +4,97 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject enemyPrefab; 
-    public float batchSpawnInterval = 5f;
-    public int minBatchSize = 2; 
-    public int maxBatchSize = 10;
-    public int batchAmount = 3;
+    private GameObject enemyPrefab; 
+    public float batchSpawnInterval = 10f;
     public float enemySpawnInterval = 0.5f;
-    private float nextBatchSpawnTime;
-    
+    public EnemyTypesSettings enemySettings;
+    private List<EnemyTypesSettings.EnemyType> enemyTypes = new List<EnemyTypesSettings.EnemyType>();
+    public int level = 1;
 
     private void Start()
     {
-        nextBatchSpawnTime = Time.time + batchSpawnInterval;
+        enemyTypes = enemySettings.enemyTypes;
+
+        StartCoroutine(StartEnemySpawning(enemyTypes.Count));
     }
 
     private void Update()
     {
-        // Checking if it's time for another batch of enemies and if there are batches left to spawn
-        if (Time.time >= nextBatchSpawnTime && batchAmount > 0)
+                
+    }
+
+    private IEnumerator StartEnemySpawning(int enemyType)
+    {
+        //Buffer time before first batch
+        yield return new WaitForSeconds(batchSpawnInterval);
+
+        //Iterate through each enemyType to start a batch spawning coroutine
+        for(int i=0; i < enemyTypes.Count; i++)
         {
-            batchAmount-=1;
-            int batchSize = Random.Range(minBatchSize, maxBatchSize);
-            
-            //Starts a coroutine that will spawn a batch of Enemies over time
-            StartCoroutine(SpawnBatch(batchSize));
-            nextBatchSpawnTime = Time.time + batchSpawnInterval;
+            if( level >= enemyTypes[i].firstLevelAppearance )// && Time.time >= nextBatchSpawnTime)
+            {    
+                //Starts a coroutine that will spawn a Type of Enemies over time
+                StartCoroutine(SpawnEnemyType(i));
+                
+                yield return new WaitForSeconds(batchSpawnInterval);
+            }
         }
     }
 
-    private IEnumerator SpawnBatch(int count)
+
+    private IEnumerator SpawnEnemyType(int enemyType)
     {
-        for (int i = 0; i < count; i++)
+        //Assign variables of enemyType
+        GameObject enemyPrefab = enemyTypes[enemyType].enemyPrefab;
+        Sprite enemySprite = enemyTypes[enemyType].enemySprite;
+        Color enemyColor = enemyTypes[enemyType].enemyColor;
+        float enemySize = enemyTypes[enemyType].enemySize;
+        int shotDamage = enemyTypes[enemyType].shotDamage;
+        float movementSpeed = enemyTypes[enemyType].movementSpeed;
+        int maxHealth = enemyTypes[enemyType].maxHealth;
+        int hitScore = enemyTypes[enemyType].hitScore;
+        float initialCircleRadius = enemyTypes[enemyType].initialCircleRadius;
+        float circleRadiusIncrement = enemyTypes[enemyType].circleRadiusIncrement;
+        int minBatchSize = enemyTypes[enemyType].minBatchSize;
+        int maxBatchSize = enemyTypes[enemyType].maxBatchSize;
+        int batchAmountOnFirstAppearance = enemyTypes[enemyType].batchAmountOnFirstAppearance;
+        int firstLevelAppearance = enemyTypes[enemyType].firstLevelAppearance;
+        int batchAmountIncreasePerLevel = enemyTypes[enemyType].batchAmountIncreasePerLevel;
+        
+        //Determine amount of batches based on Level
+        int batchesCount = 
+            batchAmountOnFirstAppearance + 
+            (batchAmountIncreasePerLevel * (level - firstLevelAppearance) );
+
+        Debug.Log("enemyType: "+ enemyType + ", batchesCount: "+ batchesCount);
+
+        //Iterate batchesCount
+        for (int j = 0; j < batchesCount; j++)
         {
-            Vector3 spawnPosition = transform.position;
+            //Determine batch size
+            int batchSize = Random.Range(minBatchSize,maxBatchSize);
 
-            GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-
-            yield return new WaitForSeconds(enemySpawnInterval);
+            //Iterate batchSize to Instantiate Enemy
+            for (int k = 0; k < batchSize; k++)
+                {
+                    GameObject enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+                    EnemyController enemyController = enemy.gameObject.GetComponent<EnemyController>();
+                    
+                    //Setting variables on Instantiated Enemy
+                    enemyController.SetConfig(
+                        enemySprite,
+                        enemyColor,
+                        enemySize,
+                        shotDamage,
+                        movementSpeed,
+                        maxHealth,
+                        hitScore,
+                        initialCircleRadius,
+                        circleRadiusIncrement
+                        );
+                    
+                    yield return new WaitForSeconds(enemySpawnInterval);
+                }
         }
     }
 }

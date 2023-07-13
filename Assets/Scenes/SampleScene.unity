@@ -436,12 +436,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1655571509f6b44976b5756a21018b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 162951245972482276, guid: f6759a17bc57e9141aef78644713fc67, type: 3}
-  batchSpawnInterval: 5
-  minBatchSize: 2
-  maxBatchSize: 10
-  batchAmount: 3
+  batchSpawnInterval: 10
   enemySpawnInterval: 0.5
+  enemySettings: {fileID: 11400000, guid: 251c0131b153b844ca8aa9f7f366fa78, type: 2}
+  level: 2
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
