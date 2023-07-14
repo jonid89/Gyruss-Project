@@ -2,4 +2,4 @@
 
 ## EnemyTypes Configuration
 
-The Enemies variables can be setted up on the EnemyTypes config file located on `Assets/Config/EnemyTypes`.
+The Enemies variables can be setted up in Unity on the EnemyTypes config located on `Assets/Config/EnemyTypes`.
