@@ -42,15 +42,19 @@ public class ObjectPooler<T> where T : Component
         {
             objectPool[prefab] = new List<T>();
 
-            //Instantiating objects and adding to the Pool
+            // Create a parent object to hold the pooled objects
+            GameObject parentObject = new GameObject(prefab.name + " Pool");
+
+            // Instantiate objects and add them to the pool
             for (int i = 0; i < size; i++)
             {
-                T obj = GameObject.Instantiate(prefab);
+                T obj = GameObject.Instantiate(prefab, parentObject.transform);
                 obj.gameObject.SetActive(false);
                 objectPool[prefab].Add(obj);
             }
         }
     }
+
 
     public T GetFromPool(T prefab)
     {
