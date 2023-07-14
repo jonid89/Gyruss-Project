@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
     private float angle;
     private GameEvents gameEvents;
     private SpriteRenderer spriteRenderer;
+    public float maxCircleRadius = 4f;
     
 
     private void Start()
@@ -24,9 +25,18 @@ public class EnemyController : MonoBehaviour
         gameEvents = GameEvents.Instance;
     }
 
+    private void OnEnable()
+    {
+        this.transform.position = centerPosition;
+    }
+
     private void Update()
     {
-        currentCircleRadius += circleRadiusIncrement * Time.deltaTime;
+        if(currentCircleRadius <= maxCircleRadius)
+        {
+            currentCircleRadius += circleRadiusIncrement * Time.deltaTime;
+        }
+        
         MoveAroundCircle();
     }
 
@@ -72,7 +82,13 @@ public class EnemyController : MonoBehaviour
         {
             GetDamage();
 
-            Destroy(collision.gameObject);
+            collision.gameObject.SetActive(false);
+        }
+        if (collision.CompareTag("Player"))
+        {
+            GetDamage();
+
+            gameEvents.TriggerPlayerDamaged();
         }
     }
 
@@ -85,7 +101,7 @@ public class EnemyController : MonoBehaviour
         if (currentHealth <= 0)
         {
             gameEvents.TriggerEnemyKilled();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

@@ -12,11 +12,20 @@ public class ShipController : MonoBehaviour
     public Transform centerTransform;
     private float angle;
     private float shotTimer; 
+    private ObjectPooler<Rigidbody2D> objectPooler;
 
     private void Start()
     {
-        
+        objectPooler = ObjectPooler<Rigidbody2D>.Instance;
+
+        CreateShotsPool();
     }
+
+    private void CreateShotsPool()
+    {
+        objectPooler.CreatePool(shotRigidbody, 30);
+    }
+        
 
     private void Update()
     {
@@ -36,7 +45,7 @@ public class ShipController : MonoBehaviour
         float targetAngle = Mathf.Atan2(directionToCenter.y, directionToCenter.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, targetAngle - 90f);
 
-        // Fire shots
+        // Fire shots every shotCooldown while Fire1 button is down
         shotTimer -= Time.deltaTime;
         if (Input.GetButton("Fire1") && shotTimer <= 0f)
         {
@@ -47,7 +56,10 @@ public class ShipController : MonoBehaviour
 
     private void FireShot()
     {
-        Rigidbody2D shotInstance = Instantiate(shotRigidbody, transform.position, transform.rotation);
-        shotInstance.velocity = transform.up * shotSpeed;
+        //Rigidbody2D  = Instantiate(shotRigidbody, transform.position, transform.rotation);
+        Rigidbody2D shotInstanceRb = objectPooler.GetFromPool(shotRigidbody);
+        shotInstanceRb.gameObject.SetActive(true);
+        shotInstanceRb.transform.position = transform.position;
+        shotInstanceRb.velocity = transform.up * shotSpeed;
     }
 }

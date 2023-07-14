@@ -17,41 +17,36 @@ public class EnemySpawner : MonoBehaviour
     public bool GetLastEnemySpawned()
     { return lastEnemySpawned;}
     private GameEvents gameEvents;
+    private ObjectPooler<EnemyController> objectPooler;
     private List<EnemyTypesSettings.EnemyType> enemyTypesListOriginal = new List<EnemyTypesSettings.EnemyType>();
     private List<EnemyTypesSettings.EnemyType> enemyTypesListCopy = new List<EnemyTypesSettings.EnemyType>();
-/*
-#region enemyTypeProperties
-            private GameObject enemyPrefab = enemyTypes[enemyType].enemyPrefab;
-            private Sprite enemySprite = enemyTypes[enemyType].enemySprite;
-            private Color enemyColor = enemyTypes[enemyType].enemyColor;
-            private float enemySize = enemyTypes[enemyType].enemySize;
-            private int shotDamage = enemyTypes[enemyType].shotDamage;
-            private float movementSpeed = enemyTypes[enemyType].movementSpeed;
-            private int maxHealth = enemyTypes[enemyType].maxHealth;
-            private int hitScore = enemyTypes[enemyType].hitScore;
-            private float initialCircleRadius = enemyTypes[enemyType].initialCircleRadius;
-            private float circleRadiusIncrement = enemyTypes[enemyType].circleRadiusIncrement;
-            private int minBatchSize = enemyTypes[enemyType].minBatchSize;
-            private int maxBatchSize = enemyTypes[enemyType].maxBatchSize;
-            private int batchAmountOnFirstAppearance = enemyTypes[enemyType].batchAmountOnFirstAppearance;
-            private int firstLevelAppearance = enemyTypes[enemyType].firstLevelAppearance;
-            private int batchAmountIncreasePerLevel = enemyTypes[enemyType].batchAmountIncreasePerLevel;
-#endregion
-*/
-
 
     private void Start()
     {
+        gameEvents = GameEvents.Instance;
+        objectPooler = ObjectPooler<EnemyController>.Instance;
+        GameEvents.OnNextLevel += StartNextLevel;
+
+        //Initializing values
         enemyTypesListOriginal = enemySettings.enemyTypes;
-        
         totalEnemyCount = 0;
         lastEnemySpawned = false;
-        
-        gameEvents = GameEvents.Instance;
-        GameEvents.OnNextLevel += StartNextLevel;
+
+        CreateEnemyPools();
 
         currentLevel = 1;
         StartNextLevel(1);
+
+    }
+
+    private void CreateEnemyPools()
+    {
+        foreach (EnemyTypesSettings.EnemyType originalType in enemyTypesListOriginal)
+        {
+            Debug.Log("originalType: " + originalType);
+            Debug.Log("Creating pool for: " + originalType.enemyPrefab.name);
+            objectPooler.CreatePool(originalType.enemyPrefab.GetComponent<EnemyController>(), 100);
+        }
     }
 
     private void OnDestroy()
@@ -61,6 +56,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void StartNextLevel(int level){
         currentLevel = level;
+        lastEnemySpawned = false;
         StartCoroutine(StartEnemySpawning());
 
     }
@@ -72,15 +68,6 @@ public class EnemySpawner : MonoBehaviour
         
         //Buffer time before first batch
         yield return new WaitForSeconds(batchSpawnInterval);
-
-        //Removing Types that are not spawned in this level        
-        /*foreach (EnemyTypesSettings.EnemyType type in enemyTypesListOriginal)
-        {
-            if(type.firstLevelAppearance > currentLevel)
-            {
-                enemyTypesListCopy.Remove(type);
-            }
-        }*/
 
         //Iterate through each enemyType to start a batch spawning coroutine
         for(int i=0; i < enemyTypesListCopy.Count; i++)
@@ -97,7 +84,7 @@ public class EnemySpawner : MonoBehaviour
         // Clear the copy list to start with a fresh copy
         enemyTypesListCopy.Clear();
 
-        // Create new instances and add them to the copy list
+        // Create new instances of enemyType and add them to the copy list
         foreach (EnemyTypesSettings.EnemyType originalType in enemyTypesListOriginal)
         {
             if(originalType.firstLevelAppearance <= currentLevel)
@@ -125,9 +112,6 @@ public class EnemySpawner : MonoBehaviour
             }
         }
     }
-
-
-
 
     private IEnumerator SpawnEnemyType(int enemyType)
     {
@@ -161,11 +145,11 @@ public class EnemySpawner : MonoBehaviour
             //Iterate batchSize to Instantiate Enemy
             for (int k = 0; k < batchSize; k++)
                 {
-                    GameObject enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
-                    EnemyController enemyController = enemy.gameObject.GetComponent<EnemyController>();
+                    EnemyController enemy = objectPooler.GetFromPool(enemyPrefab.GetComponent<EnemyController>());
+                    enemy.gameObject.SetActive(true);
                     
                     //Setting properties on Instantiated Enemy
-                    enemyController.SetConfig(
+                    enemy.SetConfig(
                         enemySprite,
                         enemyColor,
                         enemySize,
@@ -177,6 +161,7 @@ public class EnemySpawner : MonoBehaviour
                         circleRadiusIncrement
                         );
 
+                    //Counting total amount of enemies Pooled for this level
                     totalEnemyCount++;
                     
                     //Checking if this is the last enemy spawned

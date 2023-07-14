@@ -9,7 +9,7 @@ public class GameFieldCenter : MonoBehaviour
     {
         if (collision.CompareTag("Shot"))
         {
-            Destroy(collision.gameObject);
+            collision.gameObject.SetActive(false);
         }
     }
 
