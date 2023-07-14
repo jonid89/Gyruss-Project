@@ -69,7 +69,6 @@ public class ObjectPooler<T> where T : Component
             pool.Add(newObj);
             return newObj;
         }
-
         Debug.LogWarning("Object pool for the given prefab does not exist!");
         return null;
     }

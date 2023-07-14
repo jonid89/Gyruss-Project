@@ -23,6 +23,7 @@ public class GamePlayManager : MonoBehaviour
     public GameObject gameOverPopUp;
     public GameObject levelCompletedPopUp;
     private int levelCount;
+    public GameObject shipGameObject;
  
     void Start()
     {
@@ -46,27 +47,38 @@ public class GamePlayManager : MonoBehaviour
 
     public void NewLevel()
     {
+        //Increasing level count and triggering Next Level game event
         levelCount++;
         gameEvents.TriggerNextLevel(levelCount);
-
+        
         DisplayLevelCompletedText();
         
+        Debug.Log("New Level: "+levelCount);
     }
 
     public void RestartLevel()
     {
+        //Triggering Next Level game event with current level count to Restart Level
         gameEvents.TriggerNextLevel(levelCount);
+
+        Debug.Log("Level Restarted: "+levelCount);
     }
 
     public void GameOver()
     {
         gameOverPopUp.gameObject.SetActive(true);
+        
+        Debug.Log("Game Over");
     }
 
     public void RestartGame()
     {
         levelCount = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        
+        gameEvents.TriggerGameRestart();
+
+        shipGameObject.SetActive(true);
+        Debug.Log("Game Restarted");
     }
 
     private void DisplayLevelCompletedText()

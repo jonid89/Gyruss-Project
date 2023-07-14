@@ -22,7 +22,16 @@ public class EnemyController : MonoBehaviour
 
     private void Start()
     {
+        //Subscribing to Game Events
         gameEvents = GameEvents.Instance;
+        GameEvents.OnGameOver += DeactivateEnemy;
+        GameEvents.OnNextLevel += OnNextLevel;
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.OnGameOver -= DeactivateEnemy;
+        GameEvents.OnNextLevel -= OnNextLevel;
     }
 
     private void OnEnable()
@@ -86,8 +95,6 @@ public class EnemyController : MonoBehaviour
         }
         if (collision.CompareTag("Player"))
         {
-            GetDamage();
-
             gameEvents.TriggerPlayerDamaged();
         }
     }
@@ -101,7 +108,17 @@ public class EnemyController : MonoBehaviour
         if (currentHealth <= 0)
         {
             gameEvents.TriggerEnemyKilled();
-            gameObject.SetActive(false);
+            DeactivateEnemy();
         }
+    }
+
+    private void DeactivateEnemy()
+    {
+        this.gameObject.SetActive(false);
+    }
+
+    private void OnNextLevel(int level)
+    {
+        DeactivateEnemy();
     }
 }

@@ -13,12 +13,33 @@ public class ShipController : MonoBehaviour
     private float angle;
     private float shotTimer; 
     private ObjectPooler<Rigidbody2D> objectPooler;
+    private Vector3 originalPosition;
+    private GameEvents gameEvents;
 
     private void Start()
     {
-        objectPooler = ObjectPooler<Rigidbody2D>.Instance;
+        //Storing Original Position for Restart
+        //originalPosition = new Vector3(0f, circleRadius, 0f);
 
+        //Subscribing to Events
+        gameEvents = GameEvents.Instance;
+        GameEvents.OnGameOver += DeactivateShip;
+        GameEvents.OnNextLevel += OnNextLevel;
+
+        //Creating Pool of Shots
+        objectPooler = ObjectPooler<Rigidbody2D>.Instance;
         CreateShotsPool();
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.OnGameOver -= DeactivateShip;
+        GameEvents.OnNextLevel -= OnNextLevel;
+    }
+
+    private void OnEnable()
+    {
+        ResetShipPosition();
     }
 
     private void CreateShotsPool()
@@ -31,7 +52,6 @@ public class ShipController : MonoBehaviour
     {
         // Ship movement on circle
         float horizontalInput = Input.GetAxis("Horizontal");
-
         angle += horizontalInput * rotationSpeed * Time.deltaTime;
 
         float x = Mathf.Sin(angle * Mathf.Deg2Rad) * circleRadius;
@@ -62,4 +82,20 @@ public class ShipController : MonoBehaviour
         shotInstanceRb.transform.position = transform.position;
         shotInstanceRb.velocity = transform.up * shotSpeed;
     }
+
+    public void DeactivateShip()
+    {
+        this.gameObject.SetActive(false);
+    }
+
+    private void ResetShipPosition()
+    {
+        angle = 0f;
+    }
+
+    private void OnNextLevel(int level)
+    {
+        ResetShipPosition();
+    }
+
 }

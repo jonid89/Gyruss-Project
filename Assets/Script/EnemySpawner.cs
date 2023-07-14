@@ -23,42 +23,57 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
+        //Subscribe to Game Events
         gameEvents = GameEvents.Instance;
-        objectPooler = ObjectPooler<EnemyController>.Instance;
         GameEvents.OnNextLevel += StartNextLevel;
+        GameEvents.OnGameRestart += RestartSpawner;
 
         //Initializing values
         enemyTypesListOriginal = enemySettings.enemyTypes;
         totalEnemyCount = 0;
         lastEnemySpawned = false;
 
+        //Creating Pools of Enemy Prefabs
+        objectPooler = ObjectPooler<EnemyController>.Instance;
         CreateEnemyPools();
 
-        currentLevel = 1;
-        StartNextLevel(1);
-
+        //Making sure to start at level 1
+        RestartSpawner();
     }
 
     private void CreateEnemyPools()
     {
+        //Creating Pools of Enemy for each Prefab
         foreach (EnemyTypesSettings.EnemyType originalType in enemyTypesListOriginal)
         {
-            Debug.Log("originalType: " + originalType);
-            Debug.Log("Creating pool for: " + originalType.enemyPrefab.name);
             objectPooler.CreatePool(originalType.enemyPrefab.GetComponent<EnemyController>(), 100);
         }
     }
 
     private void OnDestroy()
     {
+        enemyTypesListCopy.Clear();
+        
         GameEvents.OnNextLevel -= StartNextLevel;
+        GameEvents.OnGameRestart += RestartSpawner;
+    }
+
+    private void RestartSpawner()
+    {
+        StartNextLevel(1);
     }
 
     private void StartNextLevel(int level){
+        //Resetting values for next level;
         currentLevel = level;
         lastEnemySpawned = false;
-        StartCoroutine(StartEnemySpawning());
+        totalEnemyCount = 0;
 
+        // Cancel any existing coroutines
+        StopAllCoroutines();
+
+        //Starting coroutine to Spawn Enemies
+        StartCoroutine(StartEnemySpawning());
     }
 
     private IEnumerator StartEnemySpawning()
@@ -83,7 +98,7 @@ public class EnemySpawner : MonoBehaviour
     {
         // Clear the copy list to start with a fresh copy
         enemyTypesListCopy.Clear();
-
+        
         // Create new instances of enemyType and add them to the copy list
         foreach (EnemyTypesSettings.EnemyType originalType in enemyTypesListOriginal)
         {
@@ -115,7 +130,7 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator SpawnEnemyType(int enemyType)
     {
-        //Assigning properties of enemyType
+        //Declare properties of enemyType
         GameObject enemyPrefab = enemyTypesListCopy[enemyType].enemyPrefab;
         Sprite enemySprite = enemyTypesListCopy[enemyType].enemySprite;
         Color enemyColor = enemyTypesListCopy[enemyType].enemyColor;
@@ -170,7 +185,6 @@ public class EnemySpawner : MonoBehaviour
                         (k >= batchSize-1))
                     {
                         lastEnemySpawned = true;
-                        Debug.Log("lastEnemySpawned: "+lastEnemySpawned);
                     }
                 
                     yield return new WaitForSeconds(enemySpawnInterval);

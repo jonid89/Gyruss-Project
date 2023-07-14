@@ -35,6 +35,9 @@ public class GameEvents : MonoBehaviour
     
     public delegate void GameOver();
     public static GameOver OnGameOver;
+
+    public delegate void GameRestart();
+    public static GameRestart OnGameRestart;
     
     public static void Initialize()
     {
@@ -75,6 +78,12 @@ public class GameEvents : MonoBehaviour
     {
         if(OnGameOver != null)
             OnGameOver();
+    }
+
+    public void TriggerGameRestart()
+    {
+        if(OnGameRestart != null)
+            OnGameRestart();
     }
 
 }

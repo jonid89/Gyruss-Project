@@ -13,9 +13,12 @@ public class LivesManager : MonoBehaviour
 
     private void Start()
     {
+        //Subscribe to Game Events
         gameEvents = GameEvents.Instance;
         GameEvents.OnPlayerDamaged += DecreaseLives;
+        GameEvents.OnGameRestart += ResetLives;
 
+        //Initializing values and Life icons
         currentLives = startingLives;
         InitializeLifeIcons();
         UpdateLifeIcons();
@@ -24,6 +27,7 @@ public class LivesManager : MonoBehaviour
     private void OnDestroy()
     {
         GameEvents.OnPlayerDamaged -= DecreaseLives;
+        GameEvents.OnGameRestart -= ResetLives;
     }
 
     private void InitializeLifeIcons()
@@ -41,7 +45,7 @@ public class LivesManager : MonoBehaviour
         }
     }
 
-    public void DecreaseLives()
+    private void DecreaseLives()
     {
         currentLives--;
         UpdateLifeIcons();
@@ -65,6 +69,12 @@ public class LivesManager : MonoBehaviour
                 lifeIcons[i].enabled = false;
             }
         }
+    }
+
+    private void ResetLives()
+    {
+        currentLives = startingLives;
+        UpdateLifeIcons();
     }
 
 }

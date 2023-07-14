@@ -13,20 +13,34 @@ public class ScoreManager : MonoBehaviour
     
     void Start()
     {
+        //Subscribe to Game Events
         gameEvents = GameEvents.Instance;
-        
         GameEvents.OnEnemyHit += OnEnemyHit;
+        GameEvents.OnGameRestart += ResetScore;
     }
 
     private void OnDestroy()
     {
         GameEvents.OnEnemyHit -= OnEnemyHit;
+        GameEvents.OnGameRestart -= ResetScore;
     }
 
     private void OnEnemyHit(int damage)
     {
         score += damage;
+        DisplayScore();
+    }
+
+    private void ResetScore()
+    {
+        score = 0;
+        DisplayScore();
+    }
+
+    private void DisplayScore()
+    {
         scoreText.text = "Score: " + score.ToString();
     }
+    
 
 }

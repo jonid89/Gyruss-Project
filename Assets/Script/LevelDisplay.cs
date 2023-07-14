@@ -15,18 +15,31 @@ public class LevelDisplay : MonoBehaviour
         currentLevel = 1;
         SetLevel(currentLevel);
         
-        //Subscribing to OnNextLevel event to Set Level
+        //Subscribing to Game Events
         gameEvents = GameEvents.Instance;
         GameEvents.OnNextLevel += SetLevel;
+        GameEvents.OnGameRestart += ResetLevel;
     }
 
     private void OnDestroy()
     {
         GameEvents.OnNextLevel -= SetLevel;
+        GameEvents.OnGameRestart -= ResetLevel;
     }
 
     public void SetLevel(int newLevel){
         currentLevel = newLevel;
+        DisplayLevel();
+    }
+
+    private void ResetLevel()
+    {
+        currentLevel = 1;
+        DisplayLevel();
+    }
+
+    private void DisplayLevel()
+    {
         levelText.text = "Level: " + currentLevel.ToString();
     }
 
