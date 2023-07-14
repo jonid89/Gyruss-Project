@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StartPopUp : MonoBehaviour
 {
+    /*
     public Ship ship;
     public MoveButton leftButton;
     public MoveButton rightButton;
@@ -32,6 +33,6 @@ public class StartPopUp : MonoBehaviour
             this.gameObject.SetActive(false);
         }
     }
-
+    */
 
 }

@@ -22,7 +22,7 @@ MonoBehaviour:
     maxHealth: 10
     hitScore: 2
     initialCircleRadius: 0.5
-    circleRadiusIncrement: 0.1
+    circleRadiusIncrement: 0.2
     minBatchSize: 2
     maxBatchSize: 10
     batchAmountOnFirstAppearance: 2
@@ -37,7 +37,7 @@ MonoBehaviour:
     maxHealth: 10
     hitScore: 2
     initialCircleRadius: 0.4
-    circleRadiusIncrement: 0.1
+    circleRadiusIncrement: 0.2
     minBatchSize: 2
     maxBatchSize: 4
     batchAmountOnFirstAppearance: 1

@@ -30,7 +30,12 @@ public class GameEvents : MonoBehaviour
     public delegate void LastEnemyKilled();
     public static LastEnemyKilled OnLastEnemyKilled;
     
-
+    public delegate void PlayerDamaged();
+    public static PlayerDamaged OnPlayerDamaged;
+    
+    public delegate void GameOver();
+    public static GameOver OnGameOver;
+    
     public static void Initialize()
     {
         Instance = new GameEvents();
@@ -56,9 +61,20 @@ public class GameEvents : MonoBehaviour
 
     public void TriggerLastEnemyKilled()
     {
-        Debug.Log("Data Event: LAST Enemy Killed");
         if(OnLastEnemyKilled != null)
             OnLastEnemyKilled();
+    }
+
+    public void TriggerPlayerDamaged()
+    {
+        if(OnPlayerDamaged != null)
+            OnPlayerDamaged();
+    }
+
+    public void TriggerGameOver()
+    {
+        if(OnGameOver != null)
+            OnGameOver();
     }
 
 }
