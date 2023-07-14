@@ -4,22 +4,32 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+#region Variables
+    // Configuration variables
     private GameObject enemyPrefab; 
     public float batchSpawnInterval = 10f;
     public float enemySpawnInterval = 0.5f;
     public EnemyTypesSettings enemySettings;
+
+    // Level variables
     private int currentLevel = 1;
-    private int enemyTypesToSpawn;
     private int totalEnemyCount;
     public int GetTotalEnemyCount()
     { return totalEnemyCount;}
     private bool lastEnemySpawned; 
     public bool GetLastEnemySpawned()
     { return lastEnemySpawned;}
+
+    // Game events and object pooler
     private GameEvents gameEvents;
     private ObjectPooler<EnemyController> objectPooler;
+
+    
+    // Enemy types list
     private List<EnemyTypesSettings.EnemyType> enemyTypesListOriginal = new List<EnemyTypesSettings.EnemyType>();
     private List<EnemyTypesSettings.EnemyType> enemyTypesListCopy = new List<EnemyTypesSettings.EnemyType>();
+
+#endregion
 
     private void Start()
     {
@@ -54,6 +64,7 @@ public class EnemySpawner : MonoBehaviour
     {
         enemyTypesListCopy.Clear();
         
+        //Unsubscribe to Game Events
         GameEvents.OnNextLevel -= StartNextLevel;
         GameEvents.OnGameRestart += RestartSpawner;
     }
@@ -106,6 +117,7 @@ public class EnemySpawner : MonoBehaviour
             {
                 EnemyTypesSettings.EnemyType copiedType = new EnemyTypesSettings.EnemyType
                 {
+#region Copying type Properties
                     enemyPrefab = originalType.enemyPrefab,
                     enemySprite = originalType.enemySprite,
                     enemyColor = originalType.enemyColor,
@@ -121,6 +133,7 @@ public class EnemySpawner : MonoBehaviour
                     batchAmountOnFirstAppearance = originalType.batchAmountOnFirstAppearance,
                     firstLevelAppearance = originalType.firstLevelAppearance,
                     batchAmountIncreasePerLevel = originalType.batchAmountIncreasePerLevel
+#endregion
                 };
 
                 enemyTypesListCopy.Add(copiedType);
@@ -130,6 +143,7 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator SpawnEnemyType(int enemyType)
     {
+#region EnemyType Properties Declaration
         //Declare properties of enemyType
         GameObject enemyPrefab = enemyTypesListCopy[enemyType].enemyPrefab;
         Sprite enemySprite = enemyTypesListCopy[enemyType].enemySprite;
@@ -146,6 +160,7 @@ public class EnemySpawner : MonoBehaviour
         int batchAmountOnFirstAppearance = enemyTypesListCopy[enemyType].batchAmountOnFirstAppearance;
         int firstLevelAppearance = enemyTypesListCopy[enemyType].firstLevelAppearance;
         int batchAmountIncreasePerLevel = enemyTypesListCopy[enemyType].batchAmountIncreasePerLevel;
+#endregion
         
         //Determine amount of batches based on Level
         int batchesCount = batchAmountOnFirstAppearance + 

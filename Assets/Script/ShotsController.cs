@@ -16,6 +16,7 @@ public class ShotsController : MonoBehaviour
 
     private void OnDestroy()
     {
+        //Unsubscribe to Game Events
         GameEvents.OnGameOver -= DeactivateShot;
         GameEvents.OnNextLevel -= OnNextLevel;
     }

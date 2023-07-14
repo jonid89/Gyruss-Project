@@ -41,6 +41,7 @@ public class GamePlayManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        //Unsubscribe to Game Events
         GameEvents.OnLastEnemyKilled -= NewLevel;
         GameEvents.OnGameOver -= GameOver;
     }
@@ -61,7 +62,7 @@ public class GamePlayManager : MonoBehaviour
         //Triggering Next Level game event with current level count to Restart Level
         gameEvents.TriggerNextLevel(levelCount);
 
-        Debug.Log("Level Restarted: "+levelCount);
+        Debug.Log("Level Restarted: "+ levelCount);
     }
 
     public void GameOver()

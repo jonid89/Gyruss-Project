@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class EnemyController : MonoBehaviour
 {
+#region Variables
     private int shotDamage;
     private float movementSpeed;
     private int maxHealth;
@@ -19,6 +20,8 @@ public class EnemyController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public float maxCircleRadius = 4f;
     
+#endregion
+    
 
     private void Start()
     {
@@ -30,6 +33,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnDestroy()
     {
+        //Unsubscribe to Game Events
         GameEvents.OnGameOver -= DeactivateEnemy;
         GameEvents.OnNextLevel -= OnNextLevel;
     }
@@ -49,6 +53,7 @@ public class EnemyController : MonoBehaviour
         MoveAroundCircle();
     }
 
+#region Configuration and Initialization
     public void SetConfig(
         Sprite enemySprite,
         Color enemyColor,
@@ -76,6 +81,7 @@ public class EnemyController : MonoBehaviour
         currentCircleRadius = initialCircleRadius;
         centerPosition = transform.position;
     }
+#endregion
 
     private void MoveAroundCircle()
     {
@@ -87,12 +93,15 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //Handle Shot Collision
         if (collision.CompareTag("Shot"))
         {
             GetDamage();
 
             collision.gameObject.SetActive(false);
         }
+
+        //Handle Player Collision
         if (collision.CompareTag("Player"))
         {
             gameEvents.TriggerPlayerDamaged();
@@ -103,7 +112,7 @@ public class EnemyController : MonoBehaviour
     {
         gameEvents.TriggerEnemyHit(shotDamage);
 
-        // Handling Health damaged
+        // Handling Health when damaged
         currentHealth -= shotDamage;
         if (currentHealth <= 0)
         {

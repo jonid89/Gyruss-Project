@@ -21,6 +21,7 @@ public class ScoreManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        //Unsubscribe to Game Events
         GameEvents.OnEnemyHit -= OnEnemyHit;
         GameEvents.OnGameRestart -= ResetScore;
     }

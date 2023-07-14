@@ -6,7 +6,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EnemyTypesSettings", menuName = "Create Enemy Type Settings")]
 public class EnemyTypesSettings : ScriptableObject
 {
-    
+#region Singleton
+    public static EnemyTypesSettings Instance { get; private set; }
+    private void Awake()
+    {
+        Instance = this;
+    }
+#endregion
+
     [System.Serializable] public class EnemyType{
         public GameObject enemyPrefab;
         public Sprite enemySprite;
@@ -27,12 +34,5 @@ public class EnemyTypesSettings : ScriptableObject
 
     public List<EnemyType> enemyTypes = new List<EnemyType>();
 
-#region Singleton
-    public static EnemyTypesSettings Instance { get; private set; }
-    private void Awake()
-    {
-        Instance = this;
-    }
-#endregion
 
 }

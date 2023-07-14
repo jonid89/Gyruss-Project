@@ -26,6 +26,7 @@ public class LivesManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        //Unsubscribe to Game Events
         GameEvents.OnPlayerDamaged -= DecreaseLives;
         GameEvents.OnGameRestart -= ResetLives;
     }

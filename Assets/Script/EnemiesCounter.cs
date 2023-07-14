@@ -21,6 +21,7 @@ public class EnemiesCounter : MonoBehaviour
 
     private void OnDestroy()
     {
+        //Unsubscribe to Game Events
         GameEvents.OnEnemyKilled -= OnEnemyKilled;
         GameEvents.OnGameRestart -= OnGameRestart;
         GameEvents.OnNextLevel -= OnNextLevel;

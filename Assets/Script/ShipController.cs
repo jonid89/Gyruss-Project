@@ -33,6 +33,7 @@ public class ShipController : MonoBehaviour
 
     private void OnDestroy()
     {
+        //Unsubscribe to Game Events
         GameEvents.OnGameOver -= DeactivateShip;
         GameEvents.OnNextLevel -= OnNextLevel;
     }

@@ -41,6 +41,8 @@ public class ObjectPooler<T> where T : Component
         if (!objectPool.ContainsKey(prefab))
         {
             objectPool[prefab] = new List<T>();
+
+            //Instantiating objects and adding to the Pool
             for (int i = 0; i < size; i++)
             {
                 T obj = GameObject.Instantiate(prefab);
