@@ -51,6 +51,19 @@ public class ShipController : MonoBehaviour
 
     private void Update()
     {
+        MoveShip();
+
+        // Fire shots every shotCooldown while Fire1 button is down
+        shotTimer -= Time.deltaTime;
+        if (Input.GetButton("Fire1") && shotTimer <= 0f)
+        {
+            FireShot();
+            shotTimer = shotCooldown;
+        }
+    }
+
+    private void MoveShip()
+    {
         // Ship movement on circle
         float horizontalInput = Input.GetAxis("Horizontal");
         angle += horizontalInput * rotationSpeed * Time.deltaTime;
@@ -65,14 +78,6 @@ public class ShipController : MonoBehaviour
         Vector3 directionToCenter = centerTransform.position - transform.position;
         float targetAngle = Mathf.Atan2(directionToCenter.y, directionToCenter.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, targetAngle - 90f);
-
-        // Fire shots every shotCooldown while Fire1 button is down
-        shotTimer -= Time.deltaTime;
-        if (Input.GetButton("Fire1") && shotTimer <= 0f)
-        {
-            FireShot();
-            shotTimer = shotCooldown;
-        }
     }
 
     private void FireShot()
